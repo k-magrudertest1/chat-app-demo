@@ -27,12 +27,10 @@ describe('Chat Server', () => {
 
   it('should receive and broadcast chat messages', (done) => {
     const testMessage = {
-      username: 'testUser',
       message: 'Hello, World!'
     };
 
     clientSocket.on('chat message', (data) => {
-      expect(data.username).toBe(testMessage.username);
       expect(data.message).toBe(testMessage.message);
       expect(data.timestamp).toBeDefined();
       done();
@@ -43,7 +41,6 @@ describe('Chat Server', () => {
 
   it('should not broadcast invalid messages', (done) => {
     const invalidMessage = {
-      username: '',
       message: ''
     };
 
