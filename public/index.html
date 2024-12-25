@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>シンプルチャット</title>
+  <meta charset="UTF-8">
+  <style>
+    body { margin: 0; padding: 20px; font-family: sans-serif; }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+    #form { background: #fff; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+    #input { border: 1px solid #ddd; padding: 10px; width: 80%; margin-right: .5%; }
+    #form button { width: 18%; background: #4CAF50; color: white; padding: 10px; border: none; }
+    .username { font-weight: bold; color: #2196F3; margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" placeholder="メッセージを入力..."/><button>送信</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let username = '';
+    while (!username.trim()) {
+      username = prompt('ユーザー名を入力してください:');
+    }
+
+    const socket = io();
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', {
+          username: username,
+          message: input.value
+        });
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', (data) => {
+      const li = document.createElement('li');
+      const usernameSpan = document.createElement('span');
+      usernameSpan.className = 'username';
+      usernameSpan.textContent = data.username;
+      
+      li.appendChild(usernameSpan);
+      li.appendChild(document.createTextNode(data.message));
+      messages.appendChild(li);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
+</body>
+</html>
