@@ -1,17 +1,18 @@
 class MessageHandler {
-    validateMessage(data) {
-      if (!data.message) {
-        return false;
-      }
-      return data.message.trim().length > 0;
+  validateMessage(data) {
+    if (!data.username || !data.message) {
+      return false;
     }
-  
-    formatMessage(data) {
-      return {
-        message: data.message.trim(),
-        timestamp: new Date().toISOString()
-      };
-    }
+    return data.username.trim().length > 0 && data.message.trim().length > 0;
   }
-  
-  module.exports = new MessageHandler();
+
+  formatMessage(data) {
+    return {
+      username: data.username.trim(),
+      message: data.message.trim(),
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+module.exports = new MessageHandler();
